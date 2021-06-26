@@ -51,7 +51,7 @@ export default {
     width: 30vw;
   }
   @media only screen and (min-width: 800px) {
-    width: 15vw;
+    width: 13vw;
   }
 }
 

@@ -9,6 +9,21 @@ const routes = [
     name: "Home",
     component: () => import("../views/Home.vue"),
   },
+  {
+    path: "/league",
+    name: "League",
+    component: () => import("../views/League.vue"),
+  },
+  {
+    path: "/clubs",
+    name: "Clubs",
+    component: () => import("../views/Clubs.vue"),
+  },
+  {
+    path: "/team",
+    name: "Team",
+    component: () => import("../views/Team.vue"),
+  },
 ];
 
 const router = new VueRouter({

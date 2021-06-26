@@ -16,7 +16,7 @@
         />
 
         <template #append>
-          <b-button size="lg" variant="primary" class="mb-2">
+          <b-button size="lg" variant="primary" class="mb-2" disabled>
             <b-icon icon="search" aria-label="search"></b-icon>
           </b-button>
         </template>
@@ -41,11 +41,11 @@
           "
           :img-alt="name"
           overlay
-          @click="() => $router.push(`/detail/${id}}`)"
+          @click="() => $router.push(`/league?area=${id}`)"
         />
         <div class="d-flex justify-content-center align-items-center my-2">
           <h5 class="text-break">
-            <router-link :to="`/detail/${id}}`">
+            <router-link :to="`/league?area=${id}`">
               {{ name }}
             </router-link>
           </h5>
@@ -106,9 +106,6 @@ export default {
     },
   },
   methods: {
-    addToFavorite(index) {
-      this.$store.commit("setFavorite", { index });
-    },
     handleScroll(e) {
       let { scrollTop } = e.srcElement.scrollingElement;
       if (scrollTop > 300) this.showChevronUp = true;
@@ -121,10 +118,28 @@ export default {
         behavior: "smooth",
       });
     },
-    returnIndexArea(url) {
-      const arr = url.split("/");
-      return arr[arr.length - 2];
-    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.my-card {
+  .card {
+    .position-relative {
+      .card-img {
+        width: 50vw;
+        height: 15vh;
+
+        @media only screen and (min-width: 600px) {
+          width: 20vw;
+          height: 10vh;
+        }
+        @media only screen and (min-width: 800px) {
+          width: 10vw;
+          height: 15vh;
+        }
+      }
+    }
+  }
+}
+</style>

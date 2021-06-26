@@ -9,7 +9,7 @@
       <b-input-group class="mt-5 mb-3">
         <b-form-input
           size="lg"
-          placeholder="Search Clubs"
+          placeholder="Search League"
           v-model="keyword"
           debounce="1000"
           trim
@@ -23,29 +23,29 @@
       </b-input-group>
 
       <div class="w-100 mb-4">
-        <h1 class="hide-tablet">Clubs List</h1>
-        <h2 class="hide-desktop">Clubs List</h2>
+        <h1 class="hide-tablet">League List</h1>
+        <h2 class="hide-desktop">League List</h2>
       </div>
 
       <div
         class="my-card mb-5 mx-1"
-        v-for="({ name, id, crestUrl }, i) in returnClubs"
+        v-for="({ name, id, emblemUrl }, i) in returnLeagues"
         :key="i"
       >
         <b-card
-          class="p-3"
+          class="p-3 bg-light"
           :img-src="
-            crestUrl
-              ? crestUrl
+            emblemUrl
+              ? emblemUrl
               : `https://m-tv.imgix.net/b949d9a77f6575beb96aa03ce32e6a7dd9fb3c0a6810d1dad000ccadb6e86c0c.png`
           "
           :img-alt="name"
           overlay
-          @click="() => $router.push(`/team?id=${id}`)"
+          @click="() => $router.push(`/clubs?league=${id}`)"
         />
         <div class="d-flex justify-content-center align-items-center my-2">
           <h5 class="text-break">
-            <router-link :to="`/team?id=${id}`">
+            <router-link :to="`/clubs?league=${id}`">
               {{ name }}
             </router-link>
           </h5>
@@ -76,14 +76,14 @@
 
 <script>
 export default {
-  name: "Clubs",
+  name: "League",
   data: () => ({
     isLoading: false,
     hoverIndex: null,
     showChevronUp: false,
     keyword: null,
-    filterClubs: [],
-    clubs: [],
+    filterLeague: [],
+    competitions: [],
   }),
   created() {
     // window.scrollTo(0, 0);
@@ -93,29 +93,29 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   mounted() {
-    this.loadClubs();
+    this.loadLeagues();
   },
   watch: {
     keyword(after) {
-      this.filterClubs = this.clubs.filter(
+      this.filterLeague = this.competitions.filter(
         (el) => el.name.toLowerCase().indexOf(after.toLowerCase()) > -1
       );
     },
   },
   computed: {
-    returnClubs() {
-      if (this.filterClubs.length > 0) return this.filterClubs;
+    returnLeagues() {
+      if (this.filterLeague.length > 0) return this.filterLeague.reverse();
 
-      return this.clubs;
+      return this.competitions.reverse();
     },
   },
   methods: {
-    loadClubs() {
+    loadLeagues() {
       this.isLoading = true;
 
-      get(`/competitions/${this.$route.query.league}/teams?season=2021`)
+      get(`/competitions?areas=${this.$route.query.area}`)
         .then(({ data }) => {
-          this.clubs = data.teams;
+          this.competitions = data.competitions;
         })
         .catch(console.error)
         .finally(() => (this.isLoading = false));
@@ -142,15 +142,15 @@ export default {
     .position-relative {
       .card-img {
         width: 50vw;
-        height: 25vh;
+        height: 20vh;
 
         @media only screen and (min-width: 600px) {
           width: 20vw;
-          height: 20vh;
+          height: 15vh;
         }
         @media only screen and (min-width: 800px) {
           width: 10vw;
-          height: 25 vh;
+          height: 20vh;
         }
       }
     }
