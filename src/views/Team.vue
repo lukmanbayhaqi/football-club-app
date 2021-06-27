@@ -97,16 +97,13 @@
                 "
                 :img-alt="name"
                 overlay
-                @click="handleDetailPlayer(id)"
+                @click="() => $router.push(`/player?id=${id}`)"
               />
               <div
                 class="d-flex justify-content-center align-items-center my-2"
               >
                 <h5 class="text-break">
-                  <router-link
-                    :to="{ name: 'Player', query: { id } }"
-                    target="_blank"
-                  >
+                  <router-link :to="`/player?id=${id}`">
                     {{ name }}
                   </router-link>
                 </h5>
@@ -189,10 +186,6 @@ export default {
         block: "start",
         behavior: "smooth",
       });
-    },
-    handleDetailPlayer(id) {
-      const routeData = this.$router.resolve({ name: "Player", query: { id } });
-      window.open(routeData.href, "_blank");
     },
   },
 };

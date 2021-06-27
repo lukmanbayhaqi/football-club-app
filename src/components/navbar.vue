@@ -19,7 +19,7 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav pills>
+      <b-navbar-nav>
         <b-nav-item active class="mt-2 ml-3" @click="changePage('/')">
           <div class="d-flex flex-row align-items-center">
             <b-icon
@@ -45,6 +45,20 @@
           </div>
         </b-nav-item>
       </b-navbar-nav>
+
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item>
+          <div class="w-100 d-flex" v-if="returnPage === '/player'">
+            <b-button
+              class="mt-3"
+              variant="primary"
+              @click="() => $router.back()"
+            >
+              Go Back
+            </b-button>
+          </div>
+        </b-nav-item>
+      </b-navbar-nav>
     </b-collapse>
   </b-navbar>
 </template>
@@ -52,6 +66,11 @@
 <script>
 export default {
   name: "Navbar",
+  computed: {
+    returnPage() {
+      return this.$route.path;
+    },
+  },
   methods: {
     changePage(route) {
       this.$router.push(route);
