@@ -8,7 +8,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "./styles/global.scss";
 import Axios from "axios";
-import moment from "moment";
 
 Axios.defaults.baseURL = "https://api.football-data.org/v2";
 Axios.defaults.headers["X-Auth-Token"] = "8a5d65f53dbe45d8beda4b8f1177e7eb";
@@ -20,10 +19,6 @@ window.get = (...args) => {
       .then(resolve)
       .catch(reject);
   });
-};
-
-window.formatDate = (date) => {
-  return moment(date).format("DD MMM YYYY");
 };
 
 Vue.use(BootstrapVue);
