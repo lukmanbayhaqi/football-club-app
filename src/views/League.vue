@@ -6,7 +6,15 @@
       id="container-scroll"
       @scroll="handleScroll"
     >
-      <b-input-group class="mt-5 mb-3">
+      <!-- Go back button -->
+      <div class="w-100 d-flex">
+        <b-button class="mt-3" variant="primary" @click="() => $router.back()">
+          Go Back
+        </b-button>
+      </div>
+
+      <!-- Search Box -->
+      <b-input-group class="mt-5 mb-3" v-if="returnLeagues.length > 0">
         <b-form-input
           size="lg"
           placeholder="Search League"
@@ -22,11 +30,13 @@
         </template>
       </b-input-group>
 
-      <div class="w-100 mb-4">
+      <!-- Information -->
+      <div class="w-100 mb-4" v-if="returnLeagues.length > 0">
         <h1 class="hide-tablet">League List</h1>
         <h2 class="hide-desktop">League List</h2>
       </div>
 
+      <!-- List League -->
       <div
         class="my-card mb-5 mx-1"
         v-for="({ name, id, emblemUrl }, i) in returnLeagues"
@@ -52,9 +62,13 @@
         </div>
       </div>
 
-      <!-- Loading -->
-      <div class="w-100 d-flex justify-content-center">
-        <b-spinner v-if="isLoading" variant="primary" />
+      <!-- No League placeholder -->
+      <div class="w-100" v-if="returnLeagues.length === 0">
+        <b-img
+          src="https://bambangpriantono.files.wordpress.com/2015/03/no-soccer.jpg"
+          alt="no League here"
+        />
+        <h2>There is no Football Leagues here</h2>
       </div>
     </div>
 
@@ -78,7 +92,6 @@
 export default {
   name: "League",
   data: () => ({
-    isLoading: false,
     hoverIndex: null,
     showChevronUp: false,
     keyword: null,
@@ -86,7 +99,7 @@ export default {
     competitions: [],
   }),
   created() {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     window.addEventListener("scroll", this.handleScroll);
   },
   destroyed() {
@@ -104,21 +117,16 @@ export default {
   },
   computed: {
     returnLeagues() {
-      if (this.filterLeague.length > 0) return this.filterLeague.reverse();
+      if (this.filterLeague.length > 0) return this.filterLeague;
 
-      return this.competitions.reverse();
+      return this.competitions;
     },
   },
   methods: {
     loadLeagues() {
-      this.isLoading = true;
-
-      get(`/competitions?areas=${this.$route.query.area}`)
-        .then(({ data }) => {
-          this.competitions = data.competitions;
-        })
-        .catch(console.error)
-        .finally(() => (this.isLoading = false));
+      this.competitions = this.$store.state.competitionList.filter(
+        (el) => el.area.id == this.$route.query.area
+      );
     },
     handleScroll(e) {
       let { scrollTop } = e.srcElement.scrollingElement;

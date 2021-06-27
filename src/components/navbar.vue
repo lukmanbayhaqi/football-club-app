@@ -19,13 +19,29 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <b-nav-item class="mt-2 ml-3" @click="changePage('/')">
+      <b-navbar-nav pills>
+        <b-nav-item active class="mt-2 ml-3" @click="changePage('/')">
           <div class="d-flex flex-row align-items-center">
-            <h5 style="color: black">
-              <b-icon icon="house-door" class="mr-2" />
-              <b>Home</b>
-            </h5>
+            <b-icon
+              icon="house-fill"
+              class="mr-2"
+              style="color: black; width: 2vw: height: 3vh"
+            />
+            <h3 style="color: black; font-weight: 600;">
+              Home
+            </h3>
+          </div>
+        </b-nav-item>
+        <b-nav-item class="mt-2 ml-3" @click="changePage('/competitions')">
+          <div class="d-flex flex-row align-items-center">
+            <b-icon
+              icon="globe"
+              class="mr-2"
+              style="color: black; width: 2vw: height: 3vh"
+            />
+            <h3 style="color: black; font-weight: 600;">
+              Competitions
+            </h3>
           </div>
         </b-nav-item>
       </b-navbar-nav>

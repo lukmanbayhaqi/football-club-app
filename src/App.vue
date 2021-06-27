@@ -3,6 +3,11 @@
     <navbar />
     <b-container class="p-5" id="app-container" fluid>
       <router-view />
+
+      <!-- Loading -->
+      <div class="w-100 d-flex justify-content-center">
+        <b-spinner v-if="isLoading" variant="primary" />
+      </div>
     </b-container>
   </div>
 </template>
@@ -13,17 +18,20 @@ export default {
   components: {
     Navbar,
   },
+  data: () => ({
+    isLoading: false,
+  }),
   mounted() {
     this.loadData();
   },
   methods: {
     loadData() {
-      this.$store.dispatch("fetchAllAreas");
-      // get("https://api.football-data.org/v2/areas").then(({ data }) => {
-      //   console.log(data.areas);
-      //   // resolve(true);
-      // });
-      // .catch((err) => reject(err));
+      this.isLoading = true;
+      this.$store
+        .dispatch("fetchAllAreas")
+        .then()
+        .catch()
+        .finally(() => (this.isLoading = false));
     },
   },
 };

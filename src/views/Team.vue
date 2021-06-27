@@ -2,13 +2,23 @@
   <div @scroll="handleScroll" class="mt-5">
     <!-- Container -->
     <div
-      class="row d-flex align-items-center"
+      class="row d-flex justify-content-center align-items-center"
       style="height: 50vh;"
       @scroll="handleScroll"
     >
-      <b-spinner v-if="isLoading" variant="primary" />
+      <!-- Go back button -->
+      <div v-if="!isLoading" class="w-100 d-flex">
+        <b-button class="mt-3" variant="primary" @click="() => $router.back()">
+          Go Back
+        </b-button>
+      </div>
+
+      <b-spinner
+        v-if="!$store.state.globalLoading && isLoading"
+        variant="primary"
+      />
       <div class="col-lg-12" v-else>
-        <div class="row my-5">
+        <div class="row my-5" v-if="!isError">
           <div
             class="col-lg-4 d-flex justify-content-center align-items-center flex-column"
           >
@@ -23,31 +33,39 @@
             />
           </div>
           <div class="col-lg-8 d-flex flex-column align-items-start">
-            <h1>{{ detail.name }}</h1>
+            <h1 class="hide-tablet">
+              <strong>{{ detail.name }}</strong>
+            </h1>
+            <h1 class="hide-desktop my-3 w-100">
+              <strong>{{ detail.name }}</strong>
+            </h1>
             <hr />
-            <h5>Venue: {{ detail.venue }}</h5>
+            <h5 class="left">Venue: {{ detail.venue }}</h5>
             <hr />
-            <h5>Address: {{ detail.address }}</h5>
+            <h5 class="left">Address: {{ detail.address }}</h5>
             <hr />
-            <h5>
+            <h5 class="left">
               Website:
               <a :href="detail.website" target="_blank" style="color: blue">
                 {{ detail.website }}
               </a>
             </h5>
             <hr />
-            <h5>Email: {{ detail.email }}</h5>
+            <h5 class="left">Email: {{ detail.email }}</h5>
             <hr />
-            <h5>Since: {{ detail.founded }}</h5>
+            <h5 class="left">Since: {{ detail.founded }}</h5>
             <hr />
             <section class="d-flex">
-              <h5>Active Competitions :</h5>
+              <h5 class="left">Active Competitions :</h5>
+              <h5 class="ml-3" v-if="detail.activeCompetitions.length === 0">
+                -
+              </h5>
               <section
                 v-for="({ name }, i) in detail.activeCompetitions"
                 :key="i"
                 class="ml-1"
               >
-                <h5>
+                <h5 class="left">
                   {{ name }}
                   {{ i !== detail.activeCompetitions.length - 1 ? "," : "" }}
                 </h5>
@@ -60,14 +78,51 @@
             <hr /> -->
           </div>
         </div>
-        <!-- <div class="row">
+        <div class="row" v-if="!isError">
           <div class="col-lg-12">
-            <h1>Squad List</h1>
+            <h1><strong>Squad List</strong></h1>
           </div>
-          <div class="col-lg-12">
+          <div class="w-100 d-flex flex-wrap justify-content-around mt-5">
+            <div
+              class="my-card mb-5 mx-1"
+              v-for="({ name, id, imageUrl }, i) in returnSquad"
+              :key="i"
+            >
+              <b-card
+                class=""
+                :img-src="
+                  imageUrl
+                    ? imageUrl
+                    : `http://getdrawings.com/img/standing-silhouette-26.jpg`
+                "
+                :img-alt="name"
+                overlay
+                @click="handleDetailPlayer(id)"
+              />
+              <div
+                class="d-flex justify-content-center align-items-center my-2"
+              >
+                <h5 class="text-break">
+                  <router-link
+                    :to="{ name: 'Player', query: { id } }"
+                    target="_blank"
+                  >
+                    {{ name }}
+                  </router-link>
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          </div>
-        </div> -->
+        <!-- No Clubs placeholder -->
+        <div class="w-100" v-if="!isLoading && isError">
+          <b-img
+            src="https://bambangpriantono.files.wordpress.com/2015/03/no-soccer.jpg"
+            alt="no League here"
+          />
+          <h2>There is no Football team here</h2>
+        </div>
       </div>
     </div>
 
@@ -94,6 +149,7 @@ export default {
     isLoading: true,
     detail: {},
     showChevronUp: false,
+    isError: true,
   }),
   created() {
     window.scrollTo(0, 0);
@@ -105,15 +161,21 @@ export default {
   mounted() {
     this.fetchDetailTeam();
   },
-  computed: {},
+  computed: {
+    returnSquad() {
+      return this.$store.state.squadList;
+    },
+  },
   methods: {
     fetchDetailTeam() {
       this.isLoading = true;
+      this.isError = false;
+
       get(`/teams/${this.$route.query.id}`)
         .then(({ data }) => {
           this.detail = data;
         })
-        .catch(console.log)
+        .catch((err) => (this.isError = true))
         .finally(() => (this.isLoading = false));
     },
     handleScroll(e) {
@@ -128,8 +190,23 @@ export default {
         behavior: "smooth",
       });
     },
+    handleDetailPlayer(id) {
+      const routeData = this.$router.resolve({ name: "Player", query: { id } });
+      window.open(routeData.href, "_blank");
+    },
   },
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.my-card {
+  width: 80vw;
+
+  @media only screen and (min-width: 600px) {
+    width: 40vw;
+  }
+  @media only screen and (min-width: 800px) {
+    width: 30vw;
+  }
+}
+</style>

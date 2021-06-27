@@ -10,6 +10,11 @@ const routes = [
     component: () => import("../views/Home.vue"),
   },
   {
+    path: "/competitions",
+    name: "Competitions",
+    component: () => import("../views/Competitions.vue"),
+  },
+  {
     path: "/league",
     name: "League",
     component: () => import("../views/League.vue"),
@@ -23,6 +28,11 @@ const routes = [
     path: "/team",
     name: "Team",
     component: () => import("../views/Team.vue"),
+  },
+  {
+    path: "/player",
+    name: "Player",
+    component: () => import("../views/Player.vue"),
   },
 ];
 

@@ -6,11 +6,11 @@
       id="container-scroll"
       @scroll="handleScroll"
     >
-      <!-- Search box -->
-      <b-input-group class="mt-5 mb-3">
+      <!-- Search Box -->
+      <b-input-group class="mt-5 mb-3" v-if="returnCompetitions.length > 0">
         <b-form-input
           size="lg"
-          placeholder="Search Country"
+          placeholder="Search Competitions"
           v-model="keyword"
           debounce="1000"
           trim
@@ -24,35 +24,49 @@
       </b-input-group>
 
       <!-- Information -->
-      <div class="w-100 mb-4">
-        <h1 class="hide-tablet">Country List</h1>
-        <h2 class="hide-desktop">Country List</h2>
+      <div class="w-100 mb-4" v-if="returnCompetitions.length > 0">
+        <h1 class="hide-tablet">Competitions List</h1>
+        <h2 class="hide-desktop">Competitions List</h2>
       </div>
 
-      <!-- List Country -->
+      <!-- List Competitions -->
       <div
         class="my-card mb-5 mx-1"
-        v-for="({ name, id, ensignUrl }, i) in returnAreas"
+        v-for="({ name, id, emblemUrl }, i) in returnCompetitions"
         :key="i"
       >
         <b-card
           class="p-3 bg-light"
           :img-src="
-            ensignUrl
-              ? ensignUrl
-              : `https://sophiesensei.files.wordpress.com/2014/10/blankflag.png?w=705`
+            emblemUrl
+              ? emblemUrl
+              : `https://m-tv.imgix.net/b949d9a77f6575beb96aa03ce32e6a7dd9fb3c0a6810d1dad000ccadb6e86c0c.png`
           "
           :img-alt="name"
           overlay
-          @click="() => $router.push(`/league?area=${id}`)"
+          @click="() => $router.push(`/clubs?league=${id}`)"
         />
         <div class="d-flex justify-content-center align-items-center my-2">
           <h5 class="text-break">
-            <router-link :to="`/league?area=${id}`">
+            <router-link :to="`/clubs?league=${id}`">
               {{ name }}
             </router-link>
           </h5>
         </div>
+      </div>
+
+      <!-- No Competitions placeholder -->
+      <div class="w-100" v-if="!isLoading && returnCompetitions.length === 0">
+        <b-img
+          src="https://bambangpriantono.files.wordpress.com/2015/03/no-soccer.jpg"
+          alt="no Competitions here"
+        />
+        <h2>There is no Football Competitions here</h2>
+      </div>
+
+      <!-- Loading -->
+      <div class="w-100 d-flex justify-content-center">
+        <b-spinner v-if="isLoading" variant="primary" />
       </div>
     </div>
 
@@ -74,12 +88,14 @@
 
 <script>
 export default {
-  name: "Home",
+  name: "Competitions",
   data: () => ({
+    isLoading: false,
     hoverIndex: null,
     showChevronUp: false,
     keyword: null,
-    filterArea: [],
+    filterCompetitions: [],
+    competitions: [],
   }),
   created() {
     window.scrollTo(0, 0);
@@ -90,16 +106,17 @@ export default {
   },
   watch: {
     keyword(after) {
-      this.filterArea = this.$store.state.areaList.filter(
+      this.filterCompetitions = this.$store.state.competitionList.filter(
         (el) => el.name.toLowerCase().indexOf(after.toLowerCase()) > -1
       );
     },
   },
   computed: {
-    returnAreas() {
-      if (this.filterArea.length > 0) return this.filterArea;
+    returnCompetitions() {
+      if (this.filterCompetitions.length > 0)
+        return this.filterCompetitions.reverse();
 
-      return this.$store.state.areaList;
+      return this.$store.state.competitionList.reverse();
     },
   },
   methods: {
@@ -125,15 +142,15 @@ export default {
     .position-relative {
       .card-img {
         width: 50vw;
-        height: 15vh;
+        height: 20vh;
 
         @media only screen and (min-width: 600px) {
           width: 20vw;
-          height: 10vh;
+          height: 15vh;
         }
         @media only screen and (min-width: 800px) {
           width: 10vw;
-          height: 15vh;
+          height: 20vh;
         }
       }
     }

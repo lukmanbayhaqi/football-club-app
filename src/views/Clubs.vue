@@ -6,7 +6,15 @@
       id="container-scroll"
       @scroll="handleScroll"
     >
-      <b-input-group class="mt-5 mb-3">
+      <!-- Go back button -->
+      <div class="w-100 d-flex">
+        <b-button class="mt-3" variant="primary" @click="() => $router.back()">
+          Go Back
+        </b-button>
+      </div>
+
+      <!-- Search Box -->
+      <b-input-group class="mt-5 mb-3" v-if="returnClubs.length > 0">
         <b-form-input
           size="lg"
           placeholder="Search Clubs"
@@ -22,11 +30,13 @@
         </template>
       </b-input-group>
 
-      <div class="w-100 mb-4">
+      <!-- Information -->
+      <div class="w-100 mb-4" v-if="returnClubs.length > 0">
         <h1 class="hide-tablet">Clubs List</h1>
         <h2 class="hide-desktop">Clubs List</h2>
       </div>
 
+      <!-- List clubs -->
       <div
         class="my-card mb-5 mx-1"
         v-for="({ name, id, crestUrl }, i) in returnClubs"
@@ -52,9 +62,21 @@
         </div>
       </div>
 
+      <!-- No Clubs placeholder -->
+      <div class="w-100" v-if="!isLoading && returnClubs.length === 0">
+        <b-img
+          src="https://bambangpriantono.files.wordpress.com/2015/03/no-soccer.jpg"
+          alt="no League here"
+        />
+        <h2>There is no Football Clubs here</h2>
+      </div>
+
       <!-- Loading -->
       <div class="w-100 d-flex justify-content-center">
-        <b-spinner v-if="isLoading" variant="primary" />
+        <b-spinner
+          v-if="!$store.state.globalLoading && isLoading"
+          variant="primary"
+        />
       </div>
     </div>
 
@@ -86,7 +108,6 @@ export default {
     clubs: [],
   }),
   created() {
-    // window.scrollTo(0, 0);
     window.addEventListener("scroll", this.handleScroll);
   },
   destroyed() {
@@ -150,7 +171,7 @@ export default {
         }
         @media only screen and (min-width: 800px) {
           width: 10vw;
-          height: 25 vh;
+          height: 25vh;
         }
       }
     }
