@@ -1,19 +1,28 @@
-# football-club-app
+# Footict - The Football Addict
 
-## Project setup
-```
-npm install
-```
+- **URL**
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+  [https://footict.netlify.app/](https://footict.netlify.app/)
 
-### Compiles and minifies for production
+## How to run this code
+
+- **Install Packages First**
+
+  ```
+  npm install
+  ```
+
+- **Run Code**
+  ```
+  npm run serve // default port is 8080
+  ```
+
+## How to build this code
+
 ```
 npm run build
 ```
 
-### Customize configuration
+## See more to Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
